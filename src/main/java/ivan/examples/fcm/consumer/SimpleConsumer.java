@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gson.Gson;
 
@@ -67,6 +68,7 @@ public class SimpleConsumer {
 				OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream());
 				os.write(new Gson().toJson(message));
 				os.flush();
+				os.close();
 
 				//Get Response  
 				InputStream is = connection.getInputStream();
@@ -77,6 +79,7 @@ public class SimpleConsumer {
 					response.append(line);
 					response.append('\r');
 				}
+				is.close();
 				System.out.println(response.toString());
 			}
 		} catch (Exception e) {
@@ -84,9 +87,10 @@ public class SimpleConsumer {
 			e.printStackTrace();
 
 		} finally {
-			if (connection != null) {
+			if (Objects.nonNull(connection)) {
 				connection.disconnect();
-			}
+			}		
+			
 		}
 	}
 
